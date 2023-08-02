@@ -31,7 +31,6 @@ public class PaymentScheduleElementService {
         calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, 1);
         for (int i = 1; i <= term; i++) {
-            System.out.println(calendar);
             BigDecimal totalPayment = monthlyPayment.setScale(2, RoundingMode.UP);
             BigDecimal debtPayment = calculateDebtPayment(amount, rate);
             BigDecimal interestPayment = calculateInterestPayment(monthlyPayment, debtPayment);
@@ -61,7 +60,6 @@ public class PaymentScheduleElementService {
         ZoneId zone = ZoneId.systemDefault();
         Date date = calendar.getTime();
         int numberOfDaysInCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        System.out.println("numberOfDays: " + numberOfDaysInCurrentMonth);
         int numberOfDaysInCurrentYear;
 
         if (date.toInstant().atZone(zone).toLocalDate().isLeapYear()) {
@@ -71,17 +69,13 @@ public class PaymentScheduleElementService {
         }
 
         BigDecimal rateInHundredths = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING);
-        System.out.println("rateInHundredths: " + rateInHundredths);
         BigDecimal multiplyAmountRate = amount.multiply(rateInHundredths);
-        System.out.println("multiplyAmountRate: " + multiplyAmountRate);
         log.info("Умножаем остаток платежа amount {} на rate {}, ответ: {}", amount, rate, multiplyAmountRate);
         BigDecimal multiplyNumberOfDaysInMonth = multiplyAmountRate
                 .multiply(BigDecimal.valueOf(numberOfDaysInCurrentMonth));
-        System.out.println("multiplyNumberOfDaysInMonth: " + multiplyNumberOfDaysInMonth);
         log.info("Умножаем на количество дней в месяце: {}", multiplyNumberOfDaysInMonth);
         BigDecimal debtPayment = multiplyNumberOfDaysInMonth
                 .divide(BigDecimal.valueOf(numberOfDaysInCurrentYear), RoundingMode.UP);
-        System.out.println("debtPayment: " + debtPayment);
         log.info("Делим на количество дней в году: {}", debtPayment);
         return debtPayment.setScale(2, RoundingMode.UP);
     }
