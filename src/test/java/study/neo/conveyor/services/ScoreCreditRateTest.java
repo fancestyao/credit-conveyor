@@ -3,7 +3,8 @@ package study.neo.conveyor.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import study.neo.conveyor.configuration.OriginalCreditRatePropertiesConfiguration;
+import study.neo.conveyor.configuration.ScoreCreditRatePropertiesConfiguration;
 import study.neo.conveyor.dtos.EmploymentDTO;
 import study.neo.conveyor.dtos.ScoringDataDTO;
 import study.neo.conveyor.enums.EmploymentPosition;
@@ -12,26 +13,37 @@ import study.neo.conveyor.enums.Gender;
 import study.neo.conveyor.enums.MaritalStatus;
 import study.neo.conveyor.services.classes.ScoreCreditRate;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @DisplayName("Тест сервиса ScoreCreditRate.")
 public class ScoreCreditRateTest {
     private ScoringDataDTO scoringDataDTO;
     private ScoreCreditRate scoreCreditRate;
 
     @BeforeEach
-    void setup() {
-        scoreCreditRate = new ScoreCreditRate();
+    public void setup() {
+        Integer bottomLineOfFemaleGoldenWorkingAge = 30;
+        Integer topLineOfFemaleGoldenWorkingAge = 55;
+        Integer bottomLineOfMaleGoldenWorkingAge = 35;
+        Integer topLineOfMaleGoldenWorkingAge = 60;
+        ScoreCreditRatePropertiesConfiguration scoreCreditRatePropertiesConfiguration;
+        scoreCreditRatePropertiesConfiguration = new ScoreCreditRatePropertiesConfiguration(bottomLineOfFemaleGoldenWorkingAge,
+                topLineOfFemaleGoldenWorkingAge,
+                bottomLineOfMaleGoldenWorkingAge,
+                topLineOfMaleGoldenWorkingAge);
+        Double originalCreditRate = 17.0;
+        OriginalCreditRatePropertiesConfiguration originalCreditRatePropertiesConfiguration;
+        originalCreditRatePropertiesConfiguration = new OriginalCreditRatePropertiesConfiguration(originalCreditRate);
+        scoreCreditRate = new ScoreCreditRate(scoreCreditRatePropertiesConfiguration,
+                originalCreditRatePropertiesConfiguration);
     }
 
     @Test
     @DisplayName("Тестирование метода scoreData: самоустроенный мужчина топ-менеджер.")
-    public void testScoreDataMaleSelfEmployedTopManager() throws IOException {
+    public void testScoreDataMaleSelfEmployedTopManager() {
         scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -65,7 +77,7 @@ public class ScoreCreditRateTest {
 
     @Test
     @DisplayName("Тестирование метода scoreData: владелица бизнеса девушка менеджер среднего класса.")
-    public void testScoreDataFemaleBusinessOwnerMiddleClassManager() throws IOException {
+    public void testScoreDataFemaleBusinessOwnerMiddleClassManager() {
         scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -99,7 +111,7 @@ public class ScoreCreditRateTest {
 
     @Test
     @DisplayName("Тестирование метода scoreData: владельцы небинарные личности менеджеры среднего класса.")
-    public void testScoreDataNonBinaryBusinessOwnerMiddleClassManager() throws IOException {
+    public void testScoreDataNonBinaryBusinessOwnerMiddleClassManager() {
         scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)

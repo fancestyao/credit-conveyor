@@ -31,7 +31,7 @@ public class ConveyorControllerTest {
 
     @Test
     @DisplayName("Тест по расчету кредита.")
-    void calculationTest() throws Exception {
+    void calculationTest() {
         ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
         CreditDTO expectedDTO = new CreditDTO();
         when(conveyorService.calculation(scoringDataDTO)).thenReturn(expectedDTO);
@@ -43,7 +43,7 @@ public class ConveyorControllerTest {
 
     @Test
     @DisplayName("Тест по кредитному предложению.")
-    void offersTest() throws Exception {
+    void offersTest() {
         LoanApplicationRequestDTO loanApplicationRequestDTO = new LoanApplicationRequestDTO();
         LoanOfferDTO loanOfferDTO1 = new LoanOfferDTO();
         LoanOfferDTO loanOfferDTO2 = new LoanOfferDTO();

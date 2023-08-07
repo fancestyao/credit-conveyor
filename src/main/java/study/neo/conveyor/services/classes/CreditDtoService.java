@@ -7,7 +7,6 @@ import study.neo.conveyor.dtos.CreditDTO;
 import study.neo.conveyor.dtos.PaymentScheduleElement;
 import study.neo.conveyor.dtos.ScoringDataDTO;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -16,22 +15,21 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class CreditDtoService {
-    private final PaymentScheduleElementService paymentScheduleElementService;
+    private final CalculationService calculationService;
     private final ScoreCreditRate scoreCreditRate;
-    private final LoanOfferService loanOfferService;
 
-    public CreditDTO createCreditDTO(ScoringDataDTO scoringDataDTO) throws IOException {
+    public CreditDTO createCreditDTO(ScoringDataDTO scoringDataDTO) {
         log.info("Создаем creditDTO с входными данными scoringDataDTO: {}", scoringDataDTO);
         BigDecimal rate = scoreCreditRate.scoreData(scoringDataDTO);
         log.info("Значение параметра rate: {}", rate);
-        BigDecimal monthlyPayment = loanOfferService.calculateMonthlyPayment(rate, scoringDataDTO.getTerm(),
+        BigDecimal monthlyPayment = calculationService.calculateMonthlyPayment(rate, scoringDataDTO.getTerm(),
                 scoringDataDTO.getAmount());
         log.info("Значение параметра monthlyPayment: {}", monthlyPayment);
         BigDecimal fullAmount = calculateFullAmount(monthlyPayment, scoringDataDTO.getTerm());
         log.info("Значение параметра fullAmount: {}", fullAmount);
         BigDecimal psk = calculatePsk(fullAmount, scoringDataDTO.getAmount(), scoringDataDTO.getTerm());
         log.info("Значение параметра psk: {}", psk);
-        List<PaymentScheduleElement> paymentScheduleElements = paymentScheduleElementService
+        List<PaymentScheduleElement> paymentScheduleElements = calculationService
                 .compileListOfPaymentScheduleElements(scoringDataDTO.getTerm(), monthlyPayment,
                         scoringDataDTO.getAmount(), rate);
         log.info("Значение параметра paymentScheduleElements: {}", paymentScheduleElements);
@@ -47,6 +45,14 @@ public class CreditDtoService {
                 .build();
     }
 
+    /**
+     *
+     * @param fullAmount указывает на конечную сумму кредита. Рассчитывается в следующем методе:
+     * @see CreditDtoService#calculateFullAmount(BigDecimal monthlyPayment, Integer term)
+     * @param amount указывает на желаемую сумму кредита.
+     * @param term указывает на предполагаемый период оплаты кредита
+     * @return значение полной стоимости кредита типа BigDecimal
+     */
     private BigDecimal calculatePsk(BigDecimal fullAmount, BigDecimal amount, Integer term) {
         log.info("Рассчитываем значение psk с входными данными: fullAmount {}, " +
                 "amount {}, term {}", fullAmount, amount, term);

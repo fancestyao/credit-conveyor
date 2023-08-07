@@ -3,6 +3,7 @@ package study.neo.conveyor.validations;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import study.neo.conveyor.configuration.LoanApplicationPropertiesConfiguration;
 import study.neo.conveyor.dtos.LoanApplicationRequestDTO;
 import study.neo.conveyor.exceptions.*;
 
@@ -13,15 +14,7 @@ import java.time.LocalDate;
 @Component
 @Slf4j
 public class LoanApplicationRequestValidation {
-    private static final Integer NAME_MIN_SYMBOLS_RESTRICTION = 2;
-    private static final Integer NAME_MAX_SYMBOLS_RESTRICTION = 30;
-    private static final BigDecimal CREDIT_AMOUNT_RESTRICTION = new BigDecimal("10000");
-    private static final String LATIN_SYMBOLS_REGEX_RESTRICTION = "^[a-zA-Z]*$";
-    private static final Integer CREDIT_TERM_RESTRICTION = 6;
-    private static final Integer AGE_OF_ADULTHOOD = 18;
-    private static final String EMAIL_REGEX_RESTRICTION = "[\\w.]{2,50}@[\\w.]{2,20}";
-    private static final Integer PASSPORT_SERIES_LENGTH_RESTRICTION = 4;
-    private static final Integer PASSPORT_NUMBER_LENGTH_RESTRICTION = 6;
+    private final LoanApplicationPropertiesConfiguration loanApplicationPropertiesConfiguration;
 
     public void callAllValidations(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("Валидируем имя для loanApplicationRequestDTO {}", loanApplicationRequestDTO);
@@ -44,92 +37,100 @@ public class LoanApplicationRequestValidation {
     }
 
     private void firstNameValidation(String firstName) {
-        if (!firstName.matches(LATIN_SYMBOLS_REGEX_RESTRICTION)) {
+        if (!firstName.matches(loanApplicationPropertiesConfiguration.getLatinSymbolsRegexRestriction())) {
             log.info("Имя {} не прошло валидацию на латинские буквы", firstName);
             throw new FirstNameException("При заполнении имени следует использовать латинские буквы.");
-        } else if (firstName.length() < NAME_MIN_SYMBOLS_RESTRICTION) {
+        } else if (firstName.length() < loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction()) {
             log.info("Имя {} не прошло валидацию на минимальное количество букв", firstName);
             throw new FirstNameException("Минимальная длина имени составляет "
-                    + NAME_MIN_SYMBOLS_RESTRICTION + " символа.");
-        } else if (firstName.length() > NAME_MAX_SYMBOLS_RESTRICTION) {
+                    + loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction() + " символа.");
+        } else if (firstName.length() > loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction()) {
             log.info("Имя {} не прошло валидацию на максимальное количество букв", firstName);
             throw new FirstNameException("Максимальная длина имени составляет "
-                    + NAME_MAX_SYMBOLS_RESTRICTION + " символов.");
+                    + loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction() + " символов.");
         }
     }
 
     private void lastNameValidation(String lastName) {
-        if (!lastName.matches(LATIN_SYMBOLS_REGEX_RESTRICTION)) {
+        if (!lastName.matches(loanApplicationPropertiesConfiguration.getLatinSymbolsRegexRestriction())) {
             log.info("Фамилия {} не прошла валидацию на латинские буквы", lastName);
             throw new LastNameException("При заполнении фамилии следует использовать латинские буквы.");
-        } else if (lastName.length() < NAME_MIN_SYMBOLS_RESTRICTION) {
+        } else if (lastName.length() < loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction()) {
             log.info("Фамилия {} не прошла валидацию на минимальное количество букв", lastName);
             throw new LastNameException("Минимальная длина фамилии составляет "
-                    + NAME_MIN_SYMBOLS_RESTRICTION + " символа.");
-        } else if (lastName.length() > NAME_MAX_SYMBOLS_RESTRICTION) {
+                    + loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction() + " символа.");
+        } else if (lastName.length() > loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction()) {
             log.info("Фамилия {} не прошла валидацию на максимальное количество букв", lastName);
             throw new LastNameException("Максимальная длина фамилии составляет "
-                    + NAME_MAX_SYMBOLS_RESTRICTION + " символов.");
+                    + loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction() + " символов.");
         }
     }
 
     private void middleNameValidation(String middleName) {
         if (middleName != null) {
-            if (!middleName.matches(LATIN_SYMBOLS_REGEX_RESTRICTION)) {
+            if (!middleName.matches(loanApplicationPropertiesConfiguration.getLatinSymbolsRegexRestriction())) {
                 log.info("Отчество {} не прошло валидацию на латинские буквы", middleName);
                 throw new MiddleNameException("При заполнении отчества следует использовать латинские буквы.");
-            } else if (middleName.length() < NAME_MIN_SYMBOLS_RESTRICTION) {
+            } else if (middleName.length() < loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction()) {
                 log.info("Отчество {} не прошло валидацию на минимальное количество букв", middleName);
                 throw new MiddleNameException("Минимальная длина отчества составляет "
-                        + NAME_MIN_SYMBOLS_RESTRICTION + " символа.");
-            } else if (middleName.length() > NAME_MAX_SYMBOLS_RESTRICTION) {
+                        + loanApplicationPropertiesConfiguration.getNameMinSymbolsRestriction() + " символа.");
+            } else if (middleName.length() > loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction()) {
                 log.info("Отчество {} не прошло валидацию на максимальное количество букв", middleName);
                 throw new MiddleNameException("Максимальная длина отчества составляет "
-                        + NAME_MAX_SYMBOLS_RESTRICTION + " символов.");
+                        + loanApplicationPropertiesConfiguration.getNameMaxSymbolsRestriction() + " символов.");
             }
         }
     }
 
     private void amountValidation(BigDecimal amount) {
-        if (amount.compareTo(CREDIT_AMOUNT_RESTRICTION) < 0) {
+        if (amount.compareTo(loanApplicationPropertiesConfiguration.getCreditAmountRestriction()) < 0) {
             log.info("Желаемая сумма кредита {} не прошла валидацию на минимальное значение", amount);
             throw new CreditAmountException("Значение суммы кредита должно быть больше или равно "
-                    + CREDIT_AMOUNT_RESTRICTION);
+                    + loanApplicationPropertiesConfiguration.getCreditAmountRestriction());
         }
     }
 
     private void termValidation(Integer term) {
-        if (term.compareTo(CREDIT_TERM_RESTRICTION) < 0) {
+        if (term.compareTo(loanApplicationPropertiesConfiguration.getCreditTermRestriction()) < 0) {
             log.info("Предполагаемый срок кредита {} не прошел валидацию на минимальное значение", term);
             throw new CreditTermException("Значение срока кредита должно быть больше или равно "
-                    + CREDIT_TERM_RESTRICTION);
+                    + loanApplicationPropertiesConfiguration.getCreditTermRestriction());
         }
     }
 
     private void birthDateValidation(LocalDate birthDate) {
-        if (LocalDate.now().compareTo(birthDate) < AGE_OF_ADULTHOOD) {
+        if (LocalDate.now().compareTo(birthDate) < loanApplicationPropertiesConfiguration.getAgeOfAdulthood()) {
             log.info("Дата рождения {} не прошла валидацию на минимальное значение", birthDate);
             throw new BirthDateException("Необходимо достичь совершеннолетия.");
         }
     }
 
     private void emailValidation(String email) {
-        if (!email.matches(EMAIL_REGEX_RESTRICTION)) {
+        if (!email.matches(loanApplicationPropertiesConfiguration.getEmailRegexRestriction())) {
             log.info("Электронная почта {} не прошла валидацию на установленный формат", email);
             throw new EmailException("Неверный формат заполненной почты.");
         }
     }
 
     private void passportValidation(String passportSeries, String passportNumber) {
-        if (passportSeries.length() != PASSPORT_SERIES_LENGTH_RESTRICTION) {
+        if (!passportSeries.matches("\\d+")) {
+            log.info("Серия паспорта {} не прошла валидацию на символы", passportSeries);
+            throw new PassportException("Серия паспорта должна состоять только из цифр.");
+        }
+        if (!passportNumber.matches("\\d+")) {
+            log.info("Номер паспорта {} не прошел валидацию на символы", passportSeries);
+            throw new PassportException("Номер паспорта должен состоять только из цифр.");
+        }
+        if (passportSeries.length() != loanApplicationPropertiesConfiguration.getPassportSeriesLengthRestriction()) {
             log.info("Серия паспорта {} не прошла валидацию по количество цифр", passportSeries);
             throw new PassportException("Серия паспорта должна составлять "
-                    + PASSPORT_SERIES_LENGTH_RESTRICTION + " цифры.");
+                    + loanApplicationPropertiesConfiguration.getPassportSeriesLengthRestriction() + " цифры.");
         }
-        if (passportNumber.length() != PASSPORT_NUMBER_LENGTH_RESTRICTION) {
+        if (passportNumber.length() != loanApplicationPropertiesConfiguration.getPassportNumberLengthRestriction()) {
             log.info("Номер паспорта {} не прошел валидацию по количество цифр", passportSeries);
             throw new PassportException("Номер паспорта должен составлять "
-                    + PASSPORT_NUMBER_LENGTH_RESTRICTION + "цифр.");
+                    + loanApplicationPropertiesConfiguration.getPassportNumberLengthRestriction() + "цифр.");
         }
     }
 }

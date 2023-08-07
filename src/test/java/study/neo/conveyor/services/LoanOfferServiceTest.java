@@ -4,11 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import study.neo.conveyor.configuration.OriginalCreditRatePropertiesConfiguration;
 import study.neo.conveyor.dtos.LoanApplicationRequestDTO;
 import study.neo.conveyor.dtos.LoanOfferDTO;
+import study.neo.conveyor.services.classes.CalculationService;
 import study.neo.conveyor.services.classes.LoanOfferService;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -24,7 +25,11 @@ public class LoanOfferServiceTest {
 
     @BeforeEach
     void setup() {
-        loanOfferService = new LoanOfferService();
+        Double originalCreditRate = 17.0;
+        OriginalCreditRatePropertiesConfiguration originalCreditRatePropertiesConfiguration
+                = new OriginalCreditRatePropertiesConfiguration(originalCreditRate);
+        CalculationService calculationService = new CalculationService(originalCreditRatePropertiesConfiguration);
+        loanOfferService = new LoanOfferService(calculationService);
         loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -40,7 +45,7 @@ public class LoanOfferServiceTest {
 
     @Test
     @DisplayName("Тестирование создания loanOffer с ЗП и страховкой.")
-    void createLoanOfferTestWhileIsInsuranceEnabledIsTrueAndIsSalaryClientTrue() throws IOException {
+    void createLoanOfferTestWhileIsInsuranceEnabledIsTrueAndIsSalaryClientTrue() {
         isInsuranceEnabled = Boolean.TRUE;
         isSalaryClient = Boolean.TRUE;
         LoanOfferDTO expectedResult = LoanOfferDTO.builder()
@@ -61,7 +66,7 @@ public class LoanOfferServiceTest {
 
     @Test
     @DisplayName("Тестирование создания loanOffer с ЗП, но без страховкой.")
-    void createLoanOfferTestWhileIsInsuranceEnabledIsFalseAndIsSalaryClientTrue() throws IOException {
+    void createLoanOfferTestWhileIsInsuranceEnabledIsFalseAndIsSalaryClientTrue() {
         isInsuranceEnabled = Boolean.FALSE;
         isSalaryClient = Boolean.TRUE;
         LoanOfferDTO expectedResult = LoanOfferDTO.builder()
@@ -82,7 +87,7 @@ public class LoanOfferServiceTest {
 
     @Test
     @DisplayName("Тестирование создания loanOffer без ЗП, но со страховкой.")
-    void createLoanOfferTestWhileIsInsuranceEnabledIsTrueAndIsSalaryClientFalse() throws IOException {
+    void createLoanOfferTestWhileIsInsuranceEnabledIsTrueAndIsSalaryClientFalse() {
         isInsuranceEnabled = Boolean.TRUE;
         isSalaryClient = Boolean.FALSE;
         LoanOfferDTO expectedResult = LoanOfferDTO.builder()
@@ -103,7 +108,7 @@ public class LoanOfferServiceTest {
 
     @Test
     @DisplayName("Тестирование создания loanOffer без ЗП и страховки.")
-    void createLoanOfferTestWhileIsInsuranceEnabledIsFalseAndIsSalaryClientFalse() throws IOException {
+    void createLoanOfferTestWhileIsInsuranceEnabledIsFalseAndIsSalaryClientFalse() {
         isInsuranceEnabled = Boolean.FALSE;
         isSalaryClient = Boolean.FALSE;
         LoanOfferDTO expectedResult = LoanOfferDTO.builder()

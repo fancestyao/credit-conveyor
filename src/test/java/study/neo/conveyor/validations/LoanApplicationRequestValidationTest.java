@@ -1,8 +1,9 @@
 package study.neo.conveyor.validations;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import study.neo.conveyor.configuration.LoanApplicationPropertiesConfiguration;
 import study.neo.conveyor.dtos.LoanApplicationRequestDTO;
 import study.neo.conveyor.exceptions.*;
 
@@ -11,14 +12,37 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 @DisplayName("Тест компонента валидации LoanApplicationRequestValidation.")
 public class LoanApplicationRequestValidationTest {
     private LoanApplicationRequestValidation loanApplicationRequestValidation;
+    private final BigDecimal creditAmountRestriction = BigDecimal.valueOf(10000);
+
+    @BeforeEach
+    public void setup() {
+        Integer nameMinSymbolsRestriction = 2;
+        Integer nameMaxSymbolsRestriction = 30;
+        String latinSymbolsRegexRestriction = "^[a-zA-Z]*$";
+        Integer creditTermRestriction = 6;
+        Integer ageOfAdulthood = 18;
+        String emailRegexRestriction = "[\\w.]{2,50}@[\\w.]{2,20}";
+        Integer passportSeriesLengthRestriction = 4;
+        Integer passportNumberLengthRestriction = 6;
+        LoanApplicationPropertiesConfiguration loanApplicationPropertiesConfiguration
+                = new LoanApplicationPropertiesConfiguration(nameMinSymbolsRestriction,
+                nameMaxSymbolsRestriction,
+                creditAmountRestriction,
+                latinSymbolsRegexRestriction,
+                creditTermRestriction,
+                ageOfAdulthood,
+                emailRegexRestriction,
+                passportSeriesLengthRestriction,
+                passportNumberLengthRestriction);
+        loanApplicationRequestValidation = new LoanApplicationRequestValidation(loanApplicationPropertiesConfiguration);
+    }
+
     @Test
     @DisplayName("Не английские символы в имени.")
     void firstNameNonlatinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("ТестовоеИмя")
                 .lastName("TestLastName")
@@ -37,7 +61,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Мало символов в имени.")
     void firstNameLessThanMinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("Q")
                 .lastName("TestLastName")
@@ -56,7 +79,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Много символов в имени.")
     void firstNameMoreThanMaxSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("VeryVeryVeryVeryVeryVeryVeryBigName")
                 .lastName("TestLastName")
@@ -75,7 +97,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Не английские символы в фамилии.")
     void lastNameNonlatinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("ТестовоеФамилия")
@@ -94,7 +115,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Мало символов в фамилии.")
     void lastNameLessThatMinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("Q")
@@ -113,7 +133,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Много символов в фамилии.")
     void lastNameMoreThanMaxSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("VeryVeryVeryVeryVeryVeryVeryBigLastName")
@@ -132,7 +151,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Не английские символы в отчестве.")
     void middleNameNonlatinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -151,7 +169,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Мало символов в отчестве.")
     void middleNameLessThatMinSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -170,7 +187,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Много символов в отчестве.")
     void middleNameMoreThanMaxSymbolsTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -189,7 +205,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Отрицательный показатель суммы кредита.")
     void negativeAmountTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -208,7 +223,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Отрицательный показатель желаемого срока оплаты.")
     void negativeTermTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -226,7 +240,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Несовершеннолетний.")
     void notAnAdultBirthDateTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -245,7 +258,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Неправильно заполненная почта.")
     void nonFormatEmailTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -264,7 +276,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Неправильное количество символов в серии паспорта.")
     void notFourDigitsPassportSeriesTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")
@@ -283,7 +294,6 @@ public class LoanApplicationRequestValidationTest {
     @Test
     @DisplayName("Неправильное количество символов в номере паспорта.")
     void notSixDigitsPassportNumberTest() {
-        loanApplicationRequestValidation = new LoanApplicationRequestValidation();
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .firstName("TestFirstName")
                 .lastName("TestLastName")

@@ -2,6 +2,7 @@ package study.neo.conveyor.validations;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import study.neo.conveyor.configuration.ScoringDataPropertiesConfiguration;
 import study.neo.conveyor.dtos.ScoringDataDTO;
 import study.neo.conveyor.enums.EmploymentStatus;
 import study.neo.conveyor.exceptions.BirthDateException;
@@ -18,11 +19,7 @@ import static study.neo.conveyor.enums.EmploymentStatus.UNEMPLOYED;
 @Data
 @Component
 public class ScoringDataRejectValuesValidation {
-    private static final Integer MIN_AGE_TO_LOAN = 20;
-    private static final Integer MAX_AGE_TO_LOAN = 60;
-    private static final Integer MIN_MONTHS_OF_OVERALL_EMPLOYMENT = 12;
-    private static final Integer MAX_AMOUNT_OF_SALARIES_TO_LOAN = 20;
-    private static final Integer MIN_MONTHS_OF_CURRENT_EMPLOYMENT = 3;
+    private final ScoringDataPropertiesConfiguration scoringDataPropertiesConfiguration;
 
     public void callAllValidations(ScoringDataDTO scoringDataDTO) {
         unemployedValidation(scoringDataDTO.getEmploymentDTO().getEmploymentStatus());
@@ -39,33 +36,33 @@ public class ScoringDataRejectValuesValidation {
     }
 
     private void creditAmountValidation(BigDecimal amount, BigDecimal salary) {
-        System.out.println(amount.divide(salary, RoundingMode.HALF_EVEN));
         if (amount.divide(salary, RoundingMode.HALF_EVEN)
-                .compareTo(BigDecimal.valueOf(MAX_AMOUNT_OF_SALARIES_TO_LOAN)) > 0) {
-            throw new CreditAmountException("Сумма займа должна быть больше, чем "
-                    + MAX_AMOUNT_OF_SALARIES_TO_LOAN + " зарплат.");
+                .compareTo(BigDecimal.valueOf(scoringDataPropertiesConfiguration.getMaxAmountOfSalariesToLoan())) > 0) {
+            throw new CreditAmountException("Сумма займа должна быть меньше, чем "
+                    + scoringDataPropertiesConfiguration.getMaxAmountOfSalariesToLoan() + " зарплат.");
         }
     }
 
     private void birthDateValidation(LocalDate birthDate) {
-        if (LocalDate.now().compareTo(birthDate) < MIN_AGE_TO_LOAN
-                || LocalDate.now().compareTo(birthDate) > MAX_AGE_TO_LOAN) {
+        if (LocalDate.now().compareTo(birthDate) < scoringDataPropertiesConfiguration.getMinAgeToLoan()
+                || LocalDate.now().compareTo(birthDate) > scoringDataPropertiesConfiguration.getMaxAgeToLoan()) {
             throw new BirthDateException("Возраст должен быть от "
-                    + MIN_AGE_TO_LOAN + " до " + MAX_AGE_TO_LOAN + " лет.");
+                    + scoringDataPropertiesConfiguration.getMinAgeToLoan() + " до "
+                    + scoringDataPropertiesConfiguration.getMaxAgeToLoan() + " лет.");
         }
     }
 
     private void totalWorkExperienceValidation(Integer totalWorkExperience) {
-        if (totalWorkExperience < MIN_MONTHS_OF_OVERALL_EMPLOYMENT) {
+        if (totalWorkExperience < scoringDataPropertiesConfiguration.getMinMonthsOfOverallEmployment()) {
             throw new WorkExperienceException("Общий стаж трудоустройства должен быть более "
-                    + MIN_MONTHS_OF_OVERALL_EMPLOYMENT + " месяцев.");
+                    + scoringDataPropertiesConfiguration.getMinMonthsOfOverallEmployment() + " месяцев.");
         }
     }
 
     private void currentWorkExperienceValidation(Integer currentWorkExperience) {
-        if (currentWorkExperience < MIN_MONTHS_OF_CURRENT_EMPLOYMENT) {
+        if (currentWorkExperience < scoringDataPropertiesConfiguration.getMinMonthsOfCurrentEmployment()) {
             throw new WorkExperienceException("Текущий стаж трудоустройства должен быть более "
-                    + MIN_MONTHS_OF_CURRENT_EMPLOYMENT + " месяцев.");
+                    + scoringDataPropertiesConfiguration.getMinMonthsOfCurrentEmployment() + " месяцев.");
         }
     }
 }

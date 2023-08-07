@@ -18,7 +18,6 @@ import study.neo.conveyor.services.classes.LoanOfferService;
 import study.neo.conveyor.validations.LoanApplicationRequestValidation;
 import study.neo.conveyor.validations.ScoringDataRejectValuesValidation;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -86,7 +85,7 @@ public class ConveyorServiceTest {
 
     @Test
     @DisplayName("Мок-тестирование метода offers сервиса ConveyorService.")
-    public void offersTest() throws IOException {
+    public void offersTest() {
         LoanOfferDTO loanOfferDTO1 = new LoanOfferDTO();
         loanOfferDTO1.setTotalAmount(BigDecimal.valueOf(300000));
         loanOfferDTO1.setRate(BigDecimal.valueOf(18));
@@ -101,7 +100,7 @@ public class ConveyorServiceTest {
 
     @Test
     @DisplayName("Мок-тестирование метода calculation сервиса ConveyorService.")
-    public void calculationTest() throws IOException {
+    public void calculationTest() {
         CreditDTO creditDTO = new CreditDTO();
         creditDTO.setTerm(18);
         creditDTO.setAmount(BigDecimal.valueOf(300000));

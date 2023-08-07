@@ -1,8 +1,9 @@
 package study.neo.conveyor.validations;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import study.neo.conveyor.configuration.ScoringDataPropertiesConfiguration;
 import study.neo.conveyor.dtos.EmploymentDTO;
 import study.neo.conveyor.dtos.ScoringDataDTO;
 import study.neo.conveyor.enums.EmploymentPosition;
@@ -19,15 +20,29 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 @DisplayName("Тест компонента валидации ScoringDataRejectValuesValidation.")
 public class ScoringDataRejectValuesValidationTest {
     private ScoringDataRejectValuesValidation scoringDataRejectValuesValidation;
 
+    @BeforeEach
+    public void setup() {
+        Integer minAgeToLoan = 20;
+        Integer maxAgeToLoan = 60;
+        Integer minMonthsOfOverallEmployment = 12;
+        Integer maxAmountOfSalariesToLoan = 20;
+        Integer minMonthsOfCurrentEmployment = 3;
+        ScoringDataPropertiesConfiguration scoringDataPropertiesConfiguration
+                = new ScoringDataPropertiesConfiguration(minAgeToLoan,
+                maxAgeToLoan,
+                minMonthsOfOverallEmployment,
+                maxAmountOfSalariesToLoan,
+                minMonthsOfCurrentEmployment);
+        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation(scoringDataPropertiesConfiguration);
+    }
+
     @Test
     @DisplayName("Нетрудоустроенный.")
     void unemployedValidationTest() {
-        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -61,7 +76,6 @@ public class ScoringDataRejectValuesValidationTest {
     @Test
     @DisplayName("Сумма запрашиваемой суммы кредита больше 20 ЗП.")
     void creditAmountLessThanTwentySalariesValidationTest() {
-        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -95,7 +109,6 @@ public class ScoringDataRejectValuesValidationTest {
     @Test
     @DisplayName("Возраст меньше двадцати лет.")
     void lessThanTwentyYearsOldBirthDateValidationTest() {
-        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -129,7 +142,6 @@ public class ScoringDataRejectValuesValidationTest {
     @Test
     @DisplayName("Опыт работы на текущем месте меньше 3 месяцев.")
     void lessThanThreeMonthOfCurrentWorkExperienceValidationTest() {
-        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
@@ -163,7 +175,6 @@ public class ScoringDataRejectValuesValidationTest {
     @Test
     @DisplayName("Опыт работы в общем меньше 12 месяцев.")
     void lessThanTwelveMonthsTotalWorkExperienceValidationTest() {
-        scoringDataRejectValuesValidation = new ScoringDataRejectValuesValidation();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .amount(BigDecimal.valueOf(100000))
                 .term(24)
