@@ -3,7 +3,6 @@ package study.neo.conveyor.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import study.neo.conveyor.configuration.OriginalCreditRatePropertiesConfiguration;
 import study.neo.conveyor.dtos.LoanApplicationRequestDTO;
 import study.neo.conveyor.dtos.LoanOfferDTO;
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @DisplayName("Тест сервиса LoanOfferService.")
 public class LoanOfferServiceTest {
     private LoanOfferService loanOfferService;

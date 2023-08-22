@@ -54,8 +54,8 @@ public class ScoreCreditRate {
     private void scoreCreditRateDependingOnEmploymentPosition(EmploymentPosition employmentPosition) {
         log.info("Расчет кредитной ставки при позиции трудоустройства: {}", employmentPosition);
         switch (employmentPosition) {
-            case MIDDLE_CLASS_MANAGER -> originalCreditRate -= 2;
-            case TOP_CLASS_MANAGER -> originalCreditRate -= 4;
+            case MID_MANAGER -> originalCreditRate -= 2;
+            case TOP_MANAGER -> originalCreditRate -= 4;
         }
     }
 

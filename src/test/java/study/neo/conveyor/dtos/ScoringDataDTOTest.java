@@ -48,7 +48,7 @@ public class ScoringDataDTOTest {
                         .salary(BigDecimal.valueOf(50000))
                         .workExperienceTotal(15)
                         .workExperienceCurrent(5)
-                        .employmentPosition(EmploymentPosition.TOP_CLASS_MANAGER)
+                        .employmentPosition(EmploymentPosition.TOP_MANAGER)
                         .build())
                 .account("1234567890")
                 .isInsuranceEnabled(Boolean.TRUE)
@@ -76,7 +76,7 @@ public class ScoringDataDTOTest {
                 "salary", 50000,
                 "workExperienceTotal", 15,
                 "workExperienceCurrent", 5,
-                "employmentPosition", "TOP_CLASS_MANAGER"
+                "employmentPosition", "TOP_MANAGER"
         ));
         assertThat(result).extractingJsonPathStringValue("$.account").isEqualTo("1234567890");
         assertThat(result).extractingJsonPathValue("$.isInsuranceEnabled").isEqualTo(Boolean.TRUE);
@@ -105,7 +105,7 @@ public class ScoringDataDTOTest {
                 " \"salary\": \"50000\"," +
                 " \"workExperienceTotal\": \"15\"," +
                 " \"workExperienceCurrent\": \"5\"," +
-                " \"employmentPosition\": \"TOP_CLASS_MANAGER\"}," +
+                " \"employmentPosition\": \"TOP_MANAGER\"}," +
                 " \"account\": \"1234567890\"," +
                 " \"isInsuranceEnabled\": \"true\"," +
                 " \"isSalaryClient\": \"false\"}";
@@ -130,7 +130,7 @@ public class ScoringDataDTOTest {
                 .salary(BigDecimal.valueOf(50000))
                 .workExperienceTotal(15)
                 .workExperienceCurrent(5)
-                .employmentPosition(EmploymentPosition.TOP_CLASS_MANAGER)
+                .employmentPosition(EmploymentPosition.TOP_MANAGER)
                 .build());
         AssertionsForClassTypes.assertThat(scoringDataDTO.getAccount()).isEqualTo("1234567890");
         AssertionsForClassTypes.assertThat(scoringDataDTO.getIsInsuranceEnabled()).isEqualTo(true);

@@ -47,6 +47,9 @@ public class CreditDtoService {
 
     /**
      *
+     * Формула расчета полной стоимости кредита: psk=(FA/A-1)/n*100, где
+     * psk — полная стоимость кредита; FA — полная сумма кредита;
+     * A — желаемая сумма кредита; n — количество лет погащения.
      * @param fullAmount указывает на конечную сумму кредита. Рассчитывается в следующем методе:
      * @see CreditDtoService#calculateFullAmount(BigDecimal monthlyPayment, Integer term)
      * @param amount указывает на желаемую сумму кредита.

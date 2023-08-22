@@ -75,7 +75,7 @@ public class ConveyorServiceTest {
                         .salary(BigDecimal.valueOf(50000))
                         .workExperienceTotal(15)
                         .workExperienceCurrent(5)
-                        .employmentPosition(EmploymentPosition.TOP_CLASS_MANAGER)
+                        .employmentPosition(EmploymentPosition.TOP_MANAGER)
                         .build())
                 .account("1234567890")
                 .isInsuranceEnabled(Boolean.TRUE)

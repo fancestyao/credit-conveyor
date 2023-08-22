@@ -18,8 +18,8 @@ public class LoanOfferService {
     private final CalculationService calculationService;
 
     public LoanOfferDTO createLoanOffer(Boolean isInsuranceEnabled,
-                                         Boolean isSalaryClient,
-                                         LoanApplicationRequestDTO loanApplicationRequestDTO) {
+                                        Boolean isSalaryClient,
+                                        LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("Создаем кредитное предложение с входными данными: isInsuranceEnabled {}, isSalaryClient {}, " +
                         "loanApplicationRequestDto {}", isInsuranceEnabled, isSalaryClient, loanApplicationRequestDTO);
         BigDecimal totalAmount = calculationService.calculateTotalAmount(isInsuranceEnabled,

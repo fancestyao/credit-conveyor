@@ -28,13 +28,13 @@ public class ScoringDataDTO {
     private String middleName;
     @Schema(description = "Пол клиента", example = "FEMALE")
     private Gender gender;
-    @Schema(description = "Дата рождения клиента в формате yyyy-MM-dd", example = "1999.05.18")
+    @Schema(description = "Дата рождения клиента в формате yyyy-MM-dd", example = "1999-05-18")
     private LocalDate birthDate;
     @Schema(description = "Серия паспорта клиента", example = "1234")
     private String passportSeries;
     @Schema(description = "Номер паспорта клиента", example = "123456")
     private String passportNumber;
-    @Schema(description = "Дата выдачи паспорта клиента в формате yyyy-MM-dd", example = "2020.05.27")
+    @Schema(description = "Дата выдачи паспорта клиента в формате yyyy-MM-dd", example = "2020-05-27")
     private LocalDate passportIssueDate;
     @Schema(description = "Место выдачи паспорта клиента", example = "Saratov")
     private String passportIssueBranch;
@@ -48,7 +48,7 @@ public class ScoringDataDTO {
                     " \"salary\": \"50000\"," +
                     " \"workExperienceTotal\": 15," +
                     " \"workExperienceCurrent\": 5," +
-                    " \"employmentPosition\": \"TOP_CLASS_MANAGER\"}")
+                    " \"employmentPosition\": \"TOP_MANAGER\"}")
     private EmploymentDTO employmentDTO;
     @Schema(description = "Банковский счет клиента", example = "12341234123412341234")
     private String account;

@@ -30,7 +30,7 @@ public class EmploymentDTOTest {
                 .salary(BigDecimal.valueOf(50000))
                 .workExperienceTotal(15)
                 .workExperienceCurrent(5)
-                .employmentPosition(EmploymentPosition.TOP_CLASS_MANAGER)
+                .employmentPosition(EmploymentPosition.TOP_MANAGER)
                 .build();
         JsonContent<EmploymentDTO> result = jacksonTester.write(employmentDTO);
         assertThat(result).extractingJsonPathValue("$.employmentStatus")
@@ -41,7 +41,7 @@ public class EmploymentDTOTest {
         assertThat(result).extractingJsonPathNumberValue("$.workExperienceTotal").isEqualTo(15);
         assertThat(result).extractingJsonPathNumberValue("$.workExperienceCurrent").isEqualTo(5);
         assertThat(result).extractingJsonPathValue("$.employmentPosition")
-                .isEqualTo("TOP_CLASS_MANAGER");
+                .isEqualTo("TOP_MANAGER");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class EmploymentDTOTest {
                 " \"salary\": \"50000\"," +
                 " \"workExperienceTotal\": 15," +
                 " \"workExperienceCurrent\": 5," +
-                " \"employmentPosition\": \"TOP_CLASS_MANAGER\"}";
+                " \"employmentPosition\": \"TOP_MANAGER\"}";
         EmploymentDTO employmentDTO = jacksonTester.parseObject(jsonString);
         AssertionsForClassTypes.assertThat(employmentDTO.getEmploymentStatus())
                 .isEqualTo(EmploymentStatus.SELF_EMPLOYED);
@@ -61,6 +61,6 @@ public class EmploymentDTOTest {
         AssertionsForClassTypes.assertThat(employmentDTO.getWorkExperienceTotal()).isEqualTo(15);
         AssertionsForClassTypes.assertThat(employmentDTO.getWorkExperienceCurrent()).isEqualTo(5);
         AssertionsForClassTypes.assertThat(employmentDTO.getEmploymentPosition())
-                .isEqualTo(EmploymentPosition.TOP_CLASS_MANAGER);
+                .isEqualTo(EmploymentPosition.TOP_MANAGER);
     }
 }
