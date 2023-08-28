@@ -2,5 +2,7 @@ package study.neo.conveyor.enums;
 
 public enum MaritalStatus {
     MARRIED,
-    SINGLE
+    DIVORCED,
+    SINGLE,
+    WIDOW_WIDOWER
 }
